@@ -13,7 +13,7 @@ module OmniContacts
         super *args
         @auth_host = 'graph.facebook.com'
         @authorize_path = '/oauth/authorize'
-        @scope = 'email,user_relationships,user_birthday,friends_birthday'
+        @scope = 'email,user_friends'
         @auth_token_path = '/oauth/access_token'
         @contacts_host = 'graph.facebook.com'
         @friends_path = '/me/friends'
@@ -32,8 +32,9 @@ module OmniContacts
           spouse_response = https_get(@contacts_host, spouse_path, {:access_token => access_token, :fields => 'first_name,last_name,name,id,gender,birthday,picture'})
         end
         family_response = https_get(@contacts_host, @family_path, {:access_token => access_token, :fields => 'first_name,last_name,name,id,gender,birthday,picture,relationship'})
-        friends_response = https_get(@contacts_host, @friends_path, {:access_token => access_token, :fields => 'first_name,last_name,name,id,gender,birthday,picture'})
-        logger.puts(friends_response)
+        # friends_response = https_get(@contacts_host, @friends_path, {:access_token => access_token, :fields => 'first_name,last_name,name,id,gender,birthday,picture'})
+        friends_response = https_get(@contacts_host, @friends_path, {:access_token => access_token, :fields => 'first_name,last_name,name,id,gender,picture'})
+        logger.puts(friends_response.inspect.to_s)
         contacts_from_response(spouse_response, family_response, friends_response)
       end
 
