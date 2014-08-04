@@ -93,9 +93,6 @@ module OmniContacts
     end
 
     def process_http_response response
-      logger.puts(response.inspect.to_s)
-      logger.puts(response.body.inspect.to_s)
-      logger.puts(response.head.inspect.to_s)
       raise response.body unless %w(200 301 302).include? response.code
       response.body
     end
