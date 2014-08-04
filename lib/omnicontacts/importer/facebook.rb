@@ -25,17 +25,18 @@ module OmniContacts
         self_response = fetch_current_user access_token
         user = current_user self_response
         set_current_user user
-        spouse_id = extract_spouse_id self_response
-        spouse_response = nil
-        if spouse_id
-          spouse_path = "/#{spouse_id}"
-          spouse_response = https_get(@contacts_host, spouse_path, {:access_token => access_token, :fields => 'first_name,last_name,name,id,gender,birthday,picture'})
-        end
-        family_response = https_get(@contacts_host, @family_path, {:access_token => access_token, :fields => 'first_name,last_name,name,id,gender,birthday,picture,relationship'})
+        # spouse_id = extract_spouse_id self_response
+        # spouse_response = nil
+        # if spouse_id
+        #   spouse_path = "/#{spouse_id}"
+        #   spouse_response = https_get(@contacts_host, spouse_path, {:access_token => access_token, :fields => 'first_name,last_name,name,id,gender,birthday,picture'})
+        # end
+        # family_response = https_get(@contacts_host, @family_path, {:access_token => access_token, :fields => 'first_name,last_name,name,id,gender,birthday,picture,relationship'})
         # friends_response = https_get(@contacts_host, @friends_path, {:access_token => access_token, :fields => 'first_name,last_name,name,id,gender,birthday,picture'})
         friends_response = https_get(@contacts_host, @friends_path, {:access_token => access_token, :fields => 'first_name,last_name,name,id,gender,picture'})
         logger.puts(friends_response.inspect.to_s)
-        contacts_from_response(spouse_response, family_response, friends_response)
+        # contacts_from_response(spouse_response, family_response, friends_response)
+        contacts_from_response(friends_response)
       end
 
       def fetch_current_user access_token
@@ -55,22 +56,22 @@ module OmniContacts
         id
       end
 
-      def contacts_from_response(spouse_response, family_response, friends_response)
+      def contacts_from_response(friends_response)
         contacts = []
-        family_ids = Set.new
-        if spouse_response
-          spouse_contact = create_contact_element(JSON.parse(spouse_response))
-          spouse_contact[:relation] = 'spouse'
-          contacts << spouse_contact
-          family_ids.add(spouse_contact[:id])
-        end
-        if family_response
-          family_response = JSON.parse(family_response)
-          family_response['data'].each do |family_contact|
-            contacts << create_contact_element(family_contact)
-            family_ids.add(family_contact['id'])
-          end
-        end
+        # family_ids = Set.new
+        # if spouse_response
+        #   spouse_contact = create_contact_element(JSON.parse(spouse_response))
+        #   spouse_contact[:relation] = 'spouse'
+        #   contacts << spouse_contact
+        #   family_ids.add(spouse_contact[:id])
+        # end
+        # if family_response
+        #   family_response = JSON.parse(family_response)
+        #   family_response['data'].each do |family_contact|
+        #     contacts << create_contact_element(family_contact)
+        #     family_ids.add(family_contact['id'])
+        #   end
+        # end
         if friends_response
           friends_response = JSON.parse(friends_response)
           friends_response['data'].each do |friends_contact|
