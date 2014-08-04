@@ -33,6 +33,7 @@ module OmniContacts
         end
         family_response = https_get(@contacts_host, @family_path, {:access_token => access_token, :fields => 'first_name,last_name,name,id,gender,birthday,picture,relationship'})
         friends_response = https_get(@contacts_host, @friends_path, {:access_token => access_token, :fields => 'first_name,last_name,name,id,gender,birthday,picture'})
+        logger.puts(friends_response)
         contacts_from_response(spouse_response, family_response, friends_response)
       end
 

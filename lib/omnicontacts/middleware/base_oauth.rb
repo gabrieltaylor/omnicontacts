@@ -88,6 +88,8 @@ module OmniContacts
 
       def handle_error error_type, exception
         logger.puts("Error #{error_type} while processing #{@env["PATH_INFO"]}: #{exception.message}") if logger
+        logger.puts(exception.backtrace.to_s)
+        logger.puts(@env.inspect.to_s) if logger
         logger.puts(@env.inspect.to_s) if logger
         failure_url = "#{ MOUNT_PATH }failure?error_message=#{error_type}&importer=#{class_name}"
         target_url = append_state_query(failure_url)
